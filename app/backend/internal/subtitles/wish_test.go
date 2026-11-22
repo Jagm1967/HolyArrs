@@ -15,7 +15,7 @@ func TestWish_CleanWants(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got[0].Language != "en" || got[0].HearingImpaired != HINormal || got[1].Language != "es" || got[2].Language != "en" || !got[2].Forced {
+	if got[0].Language != "en" || got[0].HearingImpaired != HINormal || got[1].Language != "es-la" || got[2].Language != "en" || !got[2].Forced {
 		t.Fatalf("%+v", got)
 	}
 	for _, bad := range [][]Want{

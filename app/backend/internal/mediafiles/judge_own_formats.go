@@ -171,7 +171,8 @@ func (s ownSpec) language(p releasename.Result) (hit, known bool) {
 		want = p.OriginalLanguage
 	}
 	for _, l := range langs {
-		if s.except && !strings.EqualFold(l, want) || !s.except && strings.EqualFold(l, want) {
+		fit := langMatches(want, l)
+		if s.except && !fit || !s.except && fit {
 			return true, true
 		}
 	}

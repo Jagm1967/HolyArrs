@@ -13,7 +13,8 @@ var languages = []language{
 	{"bn", "ben", "ben", "Bengali"}, {"bs", "bos", "bos", "Bosnian"}, {"ca", "cat", "cat", "Catalan"},
 	{"cs", "cze", "ces", "Czech"}, {"cy", "wel", "cym", "Welsh"}, {"da", "dan", "dan", "Danish"},
 	{"de", "ger", "deu", "German"}, {"el", "gre", "ell", "Greek"}, {"en", "eng", "eng", "English"},
-	{"eo", "epo", "epo", "Esperanto"}, {"es", "spa", "spa", "Spanish"}, {"et", "est", "est", "Estonian"},
+	{"eo", "epo", "epo", "Esperanto"}, {"es", "spa", "spa", "Spanish"}, {"es-es", "es-es", "es-es", "Spanish (Spain)"},
+	{"es-la", "spl", "spl", "Spanish (Latin America)"}, {"et", "est", "est", "Estonian"},
 	{"eu", "baq", "eus", "Basque"}, {"fa", "per", "fas", "Persian"}, {"fi", "fin", "fin", "Finnish"},
 	{"fr", "fre", "fra", "French"}, {"ga", "gle", "gle", "Irish"}, {"gl", "glg", "glg", "Galician"},
 	{"he", "heb", "heb", "Hebrew"}, {"hi", "hin", "hin", "Hindi"}, {"hr", "hrv", "hrv", "Croatian"},
@@ -44,6 +45,12 @@ var byCode = func() map[string]language {
 	// Extra spellings that files and sites use.
 	for _, s := range []string{"pb", "ptbr", "pt_br", "brazilian", "brazilian portuguese", "portuguese (brazilian)"} {
 		m[s] = m["pt-br"]
+	}
+	for _, s := range []string{"es_es", "eses", "castellano", "castilian", "spanish (castilian)", "spanish (spain)"} {
+		m[s] = m["es-es"]
+	}
+	for _, s := range []string{"es_la", "esla", "es-mx", "es_mx", "esmx", "es-419", "es_419", "ea", "latino", "latin american spanish", "spanish (latin america)", "spanish (latino)", "spanish (mexico)"} {
+		m[s] = m["es-la"]
 	}
 	m["iw"] = m["he"]
 	m["in"] = m["id"]

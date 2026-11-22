@@ -127,19 +127,33 @@ func baseLang(code string) string {
 	return code
 }
 
+func osQueryLang(code string) string {
+	switch code {
+	case "es-es":
+		return "es"
+	case "es-la":
+		return "ea"
+	}
+	return code
+}
+
 func (o *openSubtitles) Search(ctx context.Context, q Query) ([]Candidate, error) {
 	langs := make([]string, 0, len(q.Languages))
+	queryLangs := make([]string, 0, len(q.Languages))
 	for _, l := range q.Languages {
 		if l = siteLang(l); l != "" && !slices.Contains(langs, l) {
 			langs = append(langs, l)
+			if ql := osQueryLang(l); !slices.Contains(queryLangs, ql) {
+				queryLangs = append(queryLangs, ql)
+			}
 		}
 	}
 	if len(langs) == 0 {
 		return nil, nil
 	}
-	slices.Sort(langs)
+	slices.Sort(queryLangs)
 	v := url.Values{}
-	v.Set("languages", strings.Join(langs, ","))
+	v.Set("languages", strings.Join(queryLangs, ","))
 	imdb, tmdb := idNumber(q.IMDb), idNumber(q.TMDB)
 	if q.Hash != "" {
 		v.Set("moviehash", strings.ToLower(q.Hash))
@@ -195,6 +209,9 @@ func (o *openSubtitles) Search(ctx context.Context, q Query) ([]Candidate, error
 			continue
 		}
 		lang := siteLang(a.Language)
+		if lang == "es" && slices.Contains(langs, "es-es") && !slices.Contains(langs, "es") {
+			lang = "es-es"
+		}
 		if !langWanted(langs, lang) {
 			continue // the site answered in another language
 		}

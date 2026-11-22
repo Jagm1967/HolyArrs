@@ -280,7 +280,7 @@ func Parse(name string, h Hints) Result {
 		}
 		// A name whose marker was cut may have a hyphen inside its title
 		// (Spider-Man); the words after it are then not a group.
-		compound := tagWords[strings.ToLower(before+"-"+after[0])] || (repost && len(after) > 1)
+		compound := tagWords[strings.ToLower(before+"-"+after[0])] || langWords[strings.ToLower(before+"-"+after[0])] != "" || (repost && len(after) > 1)
 		allTags := true
 		for _, t := range after[1:] {
 			allTags = allTags && isTag(t)
@@ -740,11 +740,10 @@ func readTags(r *Result, tags []string, flags map[string]bool, h Hints) {
 	// an episode title or a subtitle note ("The Chinese Restaurant", "Thai Sub").
 	for i, t := range low {
 		code, ok := langWords[t]
+		ok = ok && !isSubtitleNote(low, i)
 		if !ok {
 			code, ok = moreLangWords[t]
-			ok = ok && (i+1 == len(low) || !plainWord(low[i+1]))
-			// "hun" also needs a tag before it, so "The.Hun.720p" stays a title.
-			ok = ok && (t != "hun" || i > 0 && !plainWord(low[i-1]))
+			ok = ok && (i+1 == len(low) || !plainWord(low[i+1])) && guardedMoreLangOK(t, low, i)
 		}
 		if ok && !slices.Contains(r.Languages, code) {
 			r.Languages = append(r.Languages, code)

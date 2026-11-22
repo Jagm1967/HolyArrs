@@ -146,10 +146,27 @@ func (v *Verdict) size(rel ReleaseFacts, rules PickRulesBody, step string, runti
 
 // langNames names every language the release-name reader knows.
 var langNames = map[string]string{"en": "English", "fr": "French", "de": "German", "it": "Italian",
-	"es": "Spanish", "ru": "Russian", "ja": "Japanese", "ko": "Korean",
+	"es": "Spanish", "es-es": "Spanish (Spain)", "es-la": "Spanish (Latin America)", "ru": "Russian", "ja": "Japanese", "ko": "Korean",
 	"pl": "Polish", "nl": "Dutch", "pt": "Portuguese", "sv": "Swedish", "da": "Danish", "no": "Norwegian",
 	"fi": "Finnish", "cs": "Czech", "hu": "Hungarian", "el": "Greek", "he": "Hebrew", "tr": "Turkish",
 	"ar": "Arabic", "hi": "Hindi", "zh": "Chinese", "th": "Thai", "vi": "Vietnamese", "uk": "Ukrainian"}
+
+// langMatches reports whether got satisfies want: exact match, or a regional
+// code (such as es-es) satisfying its base language (es).
+func langMatches(want, got string) bool {
+	want, got = strings.ToLower(want), strings.ToLower(got)
+	if want == "" || got == "" {
+		return false
+	}
+	if want == got {
+		return true
+	}
+	if strings.Contains(want, "-") {
+		return false
+	}
+	base, _, regional := strings.Cut(got, "-")
+	return regional && base == want
+}
 
 func (v *Verdict) language(p releasename.Result, rules PickRulesBody, t *TitleRef) {
 	langs := p.Languages
@@ -163,11 +180,11 @@ func (v *Verdict) language(p releasename.Result, rules PickRulesBody, t *TitleRe
 	}
 	keepsOriginal := p.Has("dual") || p.Has("multi")
 	for _, l := range langs {
-		if slices.Contains(rules.Language.Wanted, l) {
+		if slices.ContainsFunc(rules.Language.Wanted, func(w string) bool { return langMatches(w, l) }) {
 			v.add("hard", "language", "pass", LanguageName(l)+" is wanted", 0)
 			return
 		}
-		if rules.Language.OriginalOK && l == t.OriginalLanguage {
+		if rules.Language.OriginalOK && langMatches(t.OriginalLanguage, l) {
 			v.add("hard", "language", "pass", LanguageName(l)+" is the original language", 0)
 			return
 		}

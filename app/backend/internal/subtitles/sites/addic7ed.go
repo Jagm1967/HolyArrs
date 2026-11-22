@@ -402,7 +402,7 @@ func isYes(s string) bool {
 
 // a7Langs maps the site's language names to our language codes.
 var a7Langs = map[string]string{
-	"english": "en", "french": "fr", "spanish": "es", "spanish (latin america)": "es", "spanish (spain)": "es", "german": "de",
+	"english": "en", "french": "fr", "spanish": "es", "spanish (latin america)": "es-la", "spanish (spain)": "es-es", "german": "de",
 	"italian": "it", "portuguese": "pt", "portuguese (brazilian)": "pt-br", "dutch": "nl", "swedish": "sv", "polish": "pl",
 	"russian": "ru", "greek": "el", "hungarian": "hu", "romanian": "ro", "czech": "cs", "turkish": "tr", "arabic": "ar",
 	"hebrew": "he", "croatian": "hr", "serbian (latin)": "sr", "serbian (cyrillic)": "sr", "danish": "da", "finnish": "fi",

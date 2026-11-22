@@ -13,7 +13,11 @@ const (
 
 // regionCodes are the regional languages kept apart from their base
 // language, with the spellings sites use for them.
-var regionCodes = map[string]string{"pt-br": "pt-br", "pt_br": "pt-br", "ptbr": "pt-br", "pob": "pt-br", "pb": "pt-br", "br_pt": "pt-br", "br-pt": "pt-br"}
+var regionCodes = map[string]string{
+	"pt-br": "pt-br", "pt_br": "pt-br", "ptbr": "pt-br", "pob": "pt-br", "pb": "pt-br", "br_pt": "pt-br", "br-pt": "pt-br",
+	"es-es": "es-es", "es_es": "es-es", "eses": "es-es", "castellano": "es-es",
+	"es-la": "es-la", "es_la": "es-la", "esla": "es-la", "es-mx": "es-la", "es_mx": "es-la", "esmx": "es-la", "es-419": "es-la", "ea": "es-la", "spl": "es-la",
+}
 
 // siteLang turns a site's language code into ours: pt-br for Brazilian
 // Portuguese in any spelling, and the base language for every other region.
