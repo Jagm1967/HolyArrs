@@ -1,3 +1,9 @@
 {
-	"settings.account.title": "My account"
+	"settings.account.title": "My account",
+	"settings.account.installTitle": "Install HolyArrs",
+	"settings.account.installDesc": "Add HolyArrs to your home screen or desktop as a standalone app.",
+	"settings.account.installButton": "Install app",
+	"settings.account.installDone": "The app was installed or opened.",
+	"settings.account.installCancelled": "Installation was canceled or could not complete.",
+	"settings.account.installFailed": "Installation could not start."
 }

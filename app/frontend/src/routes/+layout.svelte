@@ -43,6 +43,7 @@
 	import SegmentedControl from '#lib/ui/SegmentedControl.svelte';
 	import Button from '#lib/ui/Button.svelte';
 	import { trackInputModality } from './(frame)/focus.ts';
+	import { startInstallCapture } from '#lib/core/pwa-install.svelte.ts';
 	import { focusField, rememberReturn, searchField } from '#lib/core/search-field.svelte.ts';
 	import AskHost from './(frame)/AskHost.svelte';
 	import {
@@ -177,6 +178,7 @@
 	}
 
 	onMount(trackInputModality);
+	onMount(startInstallCapture);
 	onMount(installScrollBar);
 	onMount(installPersonPrefetch);
 	// Artist and album data on hover, touch and the first cards on screen.

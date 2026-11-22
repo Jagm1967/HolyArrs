@@ -3,7 +3,8 @@
 	"ours": [
 		"brand/",
 		"why/",
-		"favicon.ico"
+		"favicon.ico",
+		"manifest.webmanifest"
 	],
 	"covered_by": [
 		{

@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { t } from '#lib/core/i18n/i18n.svelte.ts';
 	import { Account } from '#lib/accounts/index.ts';
+	import InstallAppButton from '#lib/core/InstallAppButton.svelte';
 </script>
 
 <svelte:head><title>{t('settings.account.title')} · HolyArrs</title></svelte:head>
 
-<div class="account-view"><Account /></div>
+<div class="account-view">
+	<Account />
+	<InstallAppButton />
+</div>
 
 <style>
 	.account-view {

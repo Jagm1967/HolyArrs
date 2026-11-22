@@ -40,6 +40,11 @@ var (
 	loginSeed    atomic.Pointer[func(*http.Request) []byte]
 )
 
+func init() {
+	// Scratch containers have no /etc/mime.types, so register webmanifest explicitly.
+	_ = mime.AddExtensionType(".webmanifest", "application/manifest+json")
+}
+
 // Handler serves the built app. Files under /_app/immutable/ change name
 // whenever their content changes, so browsers may keep them; everything else
 // is checked again each time. A page address that is not a file gets
@@ -130,7 +135,7 @@ func WithBase(b []byte, base string) []byte {
 	}
 	s := string(b)
 	for _, q := range []string{`"`, `url(`} {
-		for _, p := range []string{"/_app/", "/brand/", "/favicon.ico"} {
+		for _, p := range []string{"/_app/", "/brand/", "/favicon.ico", "/manifest.webmanifest"} {
 			s = strings.ReplaceAll(s, q+p, q+base+p)
 		}
 	}
@@ -141,7 +146,7 @@ func WithBase(b []byte, base string) []byte {
 // IsAsset reports whether p names a static file of the app that anyone may
 // load before signing in: scripts, styles, fonts and the logo.
 func IsAsset(p string) bool {
-	return strings.HasPrefix(p, "/_app/") || strings.HasPrefix(p, "/brand/") || p == "/favicon.ico"
+	return strings.HasPrefix(p, "/_app/") || strings.HasPrefix(p, "/brand/") || p == "/favicon.ico" || p == "/manifest.webmanifest"
 }
 
 // SetLoginSeed sets what fills LoginSeedMark on /login: JSON that is already
