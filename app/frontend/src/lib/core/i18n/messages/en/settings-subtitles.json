@@ -94,6 +94,8 @@
 	"settings.subtitles.trOpenAI": "AI service (OpenAI-style address)",
 	"settings.subtitles.trOpenAIHint": "OpenRouter, OpenAI, Ollama or LM Studio. Local ones keep everything at home.",
 	"settings.subtitles.trLingarrHint": "The address of your Lingarr server.",
+	"settings.subtitles.trDeepLHint": "Use https://api-free.deepl.com for a Free key (:fx) or https://api.deepl.com for Pro.",
+	"settings.subtitles.trLibreHint": "The address of your LibreTranslate server. Key is optional for local servers.",
 	"settings.subtitles.trModel": "Model",
 	"settings.subtitles.trKey": "Key",
 	"settings.subtitles.trKeyHint": "Kept encrypted, never shown again.",

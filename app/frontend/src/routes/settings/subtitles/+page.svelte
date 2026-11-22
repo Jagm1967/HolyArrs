@@ -268,17 +268,19 @@
 	{#if tr}
 		<form class="sc-form" onsubmit={saveTranslator} aria-label={t('settings.subtitles.translate')}>
 			<SettingsCard id="translator-card" title={t('settings.subtitles.translate')} description={t('settings.subtitles.translateDesc')}>
-				<Field id="tr-kind" label={t('settings.subtitles.translator')} hint={tr.kind === 'openai' ? t('settings.subtitles.trOpenAIHint') : tr.kind === 'lingarr' ? t('settings.subtitles.trLingarrHint') : ''}>
+				<Field id="tr-kind" label={t('settings.subtitles.translator')} hint={tr.kind === 'openai' ? t('settings.subtitles.trOpenAIHint') : tr.kind === 'lingarr' ? t('settings.subtitles.trLingarrHint') : tr.kind === 'deepl' ? t('settings.subtitles.trDeepLHint') : tr.kind === 'libretranslate' ? t('settings.subtitles.trLibreHint') : ''}>
 					<select id="tr-kind" class="input" bind:value={tr.kind} data-testid="translator-kind">
 						<option value="">{t('settings.subtitles.trOff')}</option>
 						<option value="openai">{t('settings.subtitles.trOpenAI')}</option>
 						<option value="lingarr">Lingarr</option>
+						<option value="deepl">DeepL</option>
+						<option value="libretranslate">LibreTranslate</option>
 					</select>
 				</Field>
 				{#if tr.kind}
 					<div class="two">
 						<Field id="tr-url" label={t('settings.subtitles.address')}>
-							<input id="tr-url" class="input mono" bind:value={tr.url} autocomplete="off" spellcheck="false" placeholder={tr.kind === 'openai' ? 'http://192.168.1.20:11434/v1' : 'http://192.168.1.20:9876'} required />
+							<input id="tr-url" class="input mono" bind:value={tr.url} autocomplete="off" spellcheck="false" placeholder={tr.kind === 'openai' ? 'http://192.168.1.20:11434/v1' : tr.kind === 'deepl' ? 'https://api-free.deepl.com' : tr.kind === 'libretranslate' ? 'http://192.168.1.20:5000' : 'http://192.168.1.20:9876'} required />
 						</Field>
 						{#if tr.kind === 'openai'}
 							<Field id="tr-model" label={t('settings.subtitles.trModel')}>

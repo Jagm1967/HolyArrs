@@ -16,8 +16,10 @@ import (
 
 // Kinds of translator.
 const (
-	TranslatorOpenAI  = "openai"  // any server with the OpenAI chat API: cloud services, Ollama, LM Studio
-	TranslatorLingarr = "lingarr" // a Lingarr server
+	TranslatorOpenAI         = "openai"         // any server with the OpenAI chat API: cloud services, Ollama, LM Studio
+	TranslatorLingarr        = "lingarr"        // a Lingarr server
+	TranslatorDeepL          = "deepl"          // DeepL REST API (Free or Pro)
+	TranslatorLibreTranslate = "libretranslate" // a LibreTranslate server
 )
 
 // The settings rows of the translator. The key lives in the vault; its row
@@ -51,17 +53,21 @@ func (t Translator) Ready() bool {
 	switch t.Kind {
 	case TranslatorOpenAI:
 		return t.URL != "" && t.Model != ""
-	case TranslatorLingarr:
+	case TranslatorLingarr, TranslatorDeepL, TranslatorLibreTranslate:
 		return t.URL != ""
 	}
 	return false
 }
 
-// Name is how saved subtitles and Events name the translator: the model, or
-// Lingarr.
+// Name is how saved subtitles and Events name the translator.
 func (t Translator) Name() string {
-	if t.Kind == TranslatorLingarr {
+	switch t.Kind {
+	case TranslatorLingarr:
 		return "Lingarr"
+	case TranslatorDeepL:
+		return "DeepL"
+	case TranslatorLibreTranslate:
+		return "LibreTranslate"
 	}
 	return t.Model
 }
@@ -88,7 +94,7 @@ var (
 func readTranslator(ctx context.Context, db *sql.DB) Translator {
 	get := func(k string) string { return database.SettingOr(ctx, db, trGroup, k, "") }
 	t := Translator{Kind: get(trKind), URL: get(trURL), Model: get(trModel)}
-	if t.Kind != TranslatorOpenAI && t.Kind != TranslatorLingarr {
+	if t.Kind != TranslatorOpenAI && t.Kind != TranslatorLingarr && t.Kind != TranslatorDeepL && t.Kind != TranslatorLibreTranslate {
 		t.Kind = ""
 	}
 	if translate.CheckAddress(t.URL) != nil {
@@ -110,9 +116,9 @@ func (s *Service) Translator(ctx context.Context) Translator {
 func (in *TranslatorInput) check() error {
 	in.Kind, in.URL, in.Model, in.Key = strings.TrimSpace(in.Kind), strings.TrimSpace(in.URL), strings.TrimSpace(in.Model), strings.TrimSpace(in.Key)
 	switch in.Kind {
-	case "", TranslatorOpenAI, TranslatorLingarr:
+	case "", TranslatorOpenAI, TranslatorLingarr, TranslatorDeepL, TranslatorLibreTranslate:
 	default:
-		return fmt.Errorf("kind must be %s, %s or empty for off", TranslatorOpenAI, TranslatorLingarr)
+		return fmt.Errorf("kind must be %s, %s, %s, %s or empty for off", TranslatorOpenAI, TranslatorLingarr, TranslatorDeepL, TranslatorLibreTranslate)
 	}
 	if in.Kind != "" && in.URL == "" {
 		return errors.New("the translator needs its address")
@@ -190,8 +196,13 @@ func (s *Service) translatorClient(ctx context.Context) (translate.Client, Trans
 	if err != nil {
 		return nil, t, fmt.Errorf("the translator key cannot be read: %w", err)
 	}
-	if t.Kind == TranslatorLingarr {
+	switch t.Kind {
+	case TranslatorLingarr:
 		return &translate.Lingarr{URL: t.URL, Key: key, HTTP: s.TranslateHTTP}, t, nil
+	case TranslatorDeepL:
+		return &translate.DeepL{URL: t.URL, Key: key, HTTP: s.TranslateHTTP}, t, nil
+	case TranslatorLibreTranslate:
+		return &translate.LibreTranslate{URL: t.URL, Key: key, HTTP: s.TranslateHTTP}, t, nil
 	}
 	return &translate.OpenAI{URL: t.URL, Key: key, Model: t.Model, HTTP: s.TranslateHTTP}, t, nil
 }

@@ -104,7 +104,7 @@ export interface SubtitleRow {
 }
 
 export interface Translator {
-	kind: '' | 'openai' | 'lingarr';
+	kind: '' | 'openai' | 'lingarr' | 'deepl' | 'libretranslate';
 	url: string;
 	model: string;
 	has_key: boolean;

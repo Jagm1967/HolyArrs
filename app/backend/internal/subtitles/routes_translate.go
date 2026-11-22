@@ -25,7 +25,7 @@ func (a *Handlers) getTranslator(w http.ResponseWriter, r *http.Request) {
 func (a *Handlers) putTranslator(w http.ResponseWriter, r *http.Request) {
 	cur := a.svc.Translator(r.Context()) // fields the request leaves out keep their value
 	in := TranslatorInput{Kind: cur.Kind, URL: cur.URL, Model: cur.Model, BuiltInAuto: cur.BuiltInAuto}
-	if !webserver.Decode(w, r, &in, `send any of kind (openai, lingarr or "" for off), url, model, key, clear_key and built_in_auto`) {
+	if !webserver.Decode(w, r, &in, `send any of kind (openai, lingarr, deepl, libretranslate or "" for off), url, model, key, clear_key and built_in_auto`) {
 		return
 	}
 	t, err := a.svc.SaveTranslator(r.Context(), in, actorOf(r))
