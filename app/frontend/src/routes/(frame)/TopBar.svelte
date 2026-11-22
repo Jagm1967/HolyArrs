@@ -79,7 +79,9 @@
 		{/if}
 	</div>
 	<div class="centre"><SearchField {searchKey} /></div>
-	<div class="trail"></div>
+	<div class="trail">
+		<span class="fork-pill" title="HolyArrs Fork · Jagm1967/HolyArrs">FORK</span>
+	</div>
 </header>
 
 <style>
@@ -100,6 +102,17 @@
 	:global(html.over-hero) .ui-topbar { background-color: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 	@media (prefers-reduced-motion: reduce) { .ui-topbar { transition: none; } }
 	.lead, .trail { display: flex; align-items: center; gap: 4px; min-width: 0; }
+	.trail { justify-content: flex-end; }
+	.fork-pill {
+		padding: 3px 8px;
+		border-radius: 999px;
+		font: 700 10px/1.2 var(--font-ui, system-ui, sans-serif);
+		letter-spacing: 0.06em;
+		color: #f23a2e;
+		background: rgba(242, 58, 46, 0.14);
+		border: 1px solid rgba(242, 58, 46, 0.35);
+		user-select: none;
+	}
 	.lead { container: lead / inline-size; }
 	/* Where you are, in quiet text after the arrows; hidden where the bar is narrow. */
 	/* A glass pill, so the trail stays readable over any hero frame, bright or black, in both themes. */

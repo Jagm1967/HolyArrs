@@ -65,7 +65,7 @@
 <aside {id} class="ui-sidebar" class:collapsed class:overlay aria-label={t('frame.sidebar.label')}>
 	<div class="top">
 		<a class="brand" href={brandHref} aria-label={t('frame.sidebar.home')} onclick={onpick}>
-			<img src={markSrc} alt="" width="28" height="28" /><span class="word">HolyArrs</span>
+			<img src={markSrc} alt="" width="28" height="28" /><span class="word">HolyArrs</span><span class="fork-tag" title="HolyArrs Fork · Jagm1967/HolyArrs">FORK</span>
 		</a>
 		<span class="tog">
 			<IconButton bind:node={toggle} icon="sidebar" label={collapsed ? t('frame.sidebar.show') : t('frame.sidebar.hide')} aria-expanded={!collapsed} aria-controls={id} tipSide={collapsed ? 'right' : 'below'} onclick={ontoggle} />
@@ -114,7 +114,18 @@
 	.brand img { flex: none; }
 	.brand:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 	.word { transition: opacity var(--dur-fast) var(--ease-out) var(--label-delay); }
-	.collapsed .word { opacity: 0; }
+	.fork-tag {
+		flex: none;
+		padding: 2px 6px;
+		border-radius: 999px;
+		font: 700 9px/1.2 var(--font-ui, system-ui, sans-serif);
+		letter-spacing: 0.06em;
+		color: #f23a2e;
+		background: rgba(242, 58, 46, 0.14);
+		border: 1px solid rgba(242, 58, 46, 0.35);
+		transition: opacity var(--dur-fast) var(--ease-out) var(--label-delay);
+	}
+	.collapsed .word, .collapsed .fork-tag { opacity: 0; }
 	.collapsed .top { flex-direction: column; align-items: center; padding: 0; gap: 4px; }
 	.collapsed .brand { width: 40px; justify-content: center; }
 	.collapsed .tog { display: none; }
