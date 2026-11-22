@@ -106,13 +106,18 @@ func (h *Handlers) tools() []toolSpec {
 	}
 }
 
+func (h *Handlers) allTools() []toolSpec {
+	return append(h.tools(), h.extraTools()...)
+}
+
 // callTool runs one tool; wait is set when the key is over its action limit.
 func (h *Handlers) callTool(r *http.Request, who webserver.Caller, name string, args map[string]any) (map[string]any, time.Duration) {
-	i := slices.IndexFunc(h.tools(), func(t toolSpec) bool { return t.name == name })
+	ts := h.allTools()
+	i := slices.IndexFunc(ts, func(t toolSpec) bool { return t.name == name })
 	if i < 0 {
 		return toolError("there is no tool called " + clean(name, 60)), 0
 	}
-	t := h.tools()[i]
+	t := ts[i]
 	if why := t.off(h, who); why != "" {
 		return toolError("this tool is not available: " + why + "."), 0
 	}

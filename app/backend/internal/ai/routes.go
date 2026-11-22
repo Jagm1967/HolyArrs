@@ -176,7 +176,7 @@ func (h *Handlers) serveRPC(w http.ResponseWriter, r *http.Request) {
 		rpcReply(w, http.StatusOK, msg.ID, map[string]any{}, nil)
 	case "tools/list":
 		tools := []map[string]any{}
-		for _, t := range h.tools() {
+		for _, t := range h.allTools() {
 			if why := t.off(h, who); why == "" {
 				tools = append(tools, map[string]any{"name": t.name, "title": t.title, "description": t.about, "inputSchema": t.schema,
 					"annotations": map[string]any{"readOnlyHint": !t.action}})
