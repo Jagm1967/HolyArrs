@@ -71,13 +71,13 @@
 		}
 	});
 
-	// Plex labels: owner only, shown once a Plex server is linked.
+	// Media server labels (Plex labels, Jellyfin/Emby tags): owner only.
 	type LabelSettings = { enabled: boolean; label: string; askers: boolean };
 	let labels = $state<LabelSettings | null>(null);
 	let labelForm = $state<LabelSettings>({ enabled: false, label: 'holyarrs', askers: false });
 	let labelBusy = $state(false);
 	let labelRunBusy = $state(false);
-	const hasPlex = $derived(servers.some((m) => m.kind === 'plex'));
+	const hasLabelServer = $derived(servers.some((m) => m.kind === 'plex' || m.kind === 'jellyfin' || m.kind === 'emby'));
 	const labelsChanged = $derived(!!labels && (labels.enabled !== labelForm.enabled || labels.label !== labelForm.label.trim() || labels.askers !== labelForm.askers));
 	async function loadLabels() {
 		try {
@@ -331,7 +331,7 @@
 	</section>
 {/if}
 
-{#if loaded && isOwner && hasPlex && labels && !editing}
+{#if loaded && isOwner && hasLabelServer && labels && !editing}
 	<form class="card watch" data-testid="plex-labels" onsubmit={saveLabels} aria-label={t('settings.mediaServers.labelTitle')}>
 		<h2 class="h3">{t('settings.mediaServers.labelTitle')}</h2>
 		<label class="checkline">

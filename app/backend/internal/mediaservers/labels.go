@@ -197,10 +197,18 @@ func (l *Linker) LabelPlex(ctx context.Context, all bool) (int, error) {
 	n := 0
 	var errs []error
 	for _, m := range ms {
-		if m.Kind != "plex" || m.TokenSecretID == nil {
+		if m.TokenSecretID == nil {
 			continue
 		}
-		got, err := l.labelServer(ctx, m, set, asked)
+		var got int
+		switch m.Kind {
+		case "plex":
+			got, err = l.labelServer(ctx, m, set, asked)
+		case "jellyfin", "emby":
+			got, err = l.labelJellyServer(ctx, m, set, asked)
+		default:
+			continue
+		}
 		n += got
 		if err != nil {
 			if ctx.Err() != nil {

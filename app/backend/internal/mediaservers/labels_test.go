@@ -215,7 +215,8 @@ func TestPlexLabelsSkipOtherServers(t *testing.T) {
 		t.Errorf("Jellyfin was called: %s", r.URL.Path)
 	}))
 	t.Cleanup(jelly.Close)
-	if _, err := Add(ctx, w.s, w.v, Input{Name: "Jelly", Kind: "jellyfin", URL: jelly.URL, Token: tok}, domain.System); err != nil {
+	off := false
+	if _, err := Add(ctx, w.s, w.v, Input{Name: "Jelly", Kind: "jellyfin", URL: jelly.URL, Token: tok, Enabled: &off}, domain.System); err != nil {
 		t.Fatal(err)
 	}
 	labelsOn(t, w, LabelSettings{Enabled: true, Label: "holyarrs"})
