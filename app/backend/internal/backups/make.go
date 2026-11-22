@@ -326,6 +326,7 @@ func (m *Manager) write(ctx context.Context, kind string, files map[string]strin
 		return Info{}, err
 	}
 	ok = true
+	mirrorCopy(final, name)
 	fi, _ := os.Stat(final)
 	return Info{Name: name, Kind: kind, CreatedAt: at, Size: fi.Size(), Detail: meta.Detail, Path: final}, nil
 }
@@ -396,6 +397,7 @@ func (m *Manager) Prune(p Preset) error {
 	for _, b := range sched {
 		if !keep[b.Name] {
 			errs = append(errs, os.Remove(b.Path))
+			mirrorRemove(b.Name)
 		}
 	}
 	return errors.Join(errs...)
