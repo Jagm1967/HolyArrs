@@ -25,7 +25,7 @@ func (h *Handlers) extraTools() []toolSpec {
 			title:  "Library stats",
 			about:  "Counts and disk usage of movies, shows and music in the Library.",
 			schema: object(map[string]any{}),
-			off:    mediaOff,
+			off:    needPerm(webserver.PermManageLibrary, mediaOff),
 			run:    toolLibraryStats,
 		},
 		{
@@ -45,7 +45,7 @@ func (h *Handlers) extraTools() []toolSpec {
 				"kind":     map[string]any{"type": "string", "enum": []string{"movie", "show"}},
 				"limit":    intProp("Maximum number of rows (1 to 100, default 25)."),
 			}),
-			off: subtitlesOff,
+			off: needPerm(webserver.PermManageLibrary, subtitlesOff),
 			run: toolMissingSubtitles,
 		},
 		{
@@ -95,7 +95,11 @@ func (h *Handlers) extraTools() []toolSpec {
 }
 
 func toolLibraryStats(h *Handlers, r *http.Request, who webserver.Caller, _ map[string]any) (any, error) {
-	return h.read(r, who, "/api/v1/library/stats")
+	code, v := h.call(r, who, webserver.ScopeAdmin, http.MethodGet, "/api/v1/library/stats", nil)
+	if code != http.StatusOK {
+		return nil, failure{routeError(code, v)}
+	}
+	return v, nil
 }
 
 func toolRecentAdditions(h *Handlers, r *http.Request, who webserver.Caller, _ map[string]any) (any, error) {
