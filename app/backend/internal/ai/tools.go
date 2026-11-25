@@ -112,6 +112,20 @@ func (h *Handlers) allTools() []toolSpec {
 
 // callTool runs one tool; wait is set when the key is over its action limit.
 func (h *Handlers) callTool(r *http.Request, who webserver.Caller, name string, args map[string]any) (map[string]any, time.Duration) {
+	if strings.HasPrefix(name, "plugin.") {
+		if !h.pluginToolsOn(who) {
+			return toolError("this tool is not available: plugin tools are off for this key."), 0
+		}
+		if ok, wait := h.Allow(&h.Acts, who.KeyID, ActsPerHour, time.Hour); !ok {
+			return nil, wait
+		}
+		out, err := h.PluginTools.Call(r, who, name, args)
+		if err != nil {
+			return toolError(clean(err.Error(), TextMax)), 0
+		}
+		text, _ := json.Marshal(out)
+		return map[string]any{"content": []any{map[string]any{"type": "text", "text": string(text)}}, "isError": false}, 0
+	}
 	ts := h.allTools()
 	i := slices.IndexFunc(ts, func(t toolSpec) bool { return t.name == name })
 	if i < 0 {
@@ -141,6 +155,15 @@ func (h *Handlers) callTool(r *http.Request, who webserver.Caller, name string, 
 	}
 	text, _ := json.Marshal(m)
 	return map[string]any{"content": []any{map[string]any{"type": "text", "text": string(text)}}, "structuredContent": m, "isError": false}, 0
+}
+
+// pluginToolsOn says whether who's key has the Plugin tools box ticked.
+func (h *Handlers) pluginToolsOn(who webserver.Caller) bool {
+	if h.PluginTools == nil {
+		return false
+	}
+	set, _ := mcpkeys.Parse(who.MCPGroups)
+	return slices.Contains(set, mcpkeys.Plugins)
 }
 
 func toolError(msg string) map[string]any {

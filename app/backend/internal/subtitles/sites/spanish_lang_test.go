@@ -11,13 +11,13 @@ import (
 func TestSiteLang_SpanishRegions(t *testing.T) {
 	for in, want := range map[string]string{
 		"es": "es", "es-ES": "es-es", "es_es": "es-es", "Castellano": "es-es",
-		"es-LA": "es-la", "es-MX": "es-la", "es-419": "es-la", "EA": "es-la", "SPL": "es-la",
+		"es-LA": "es-419", "es-MX": "es-419", "es-419": "es-419", "EA": "es-419", "SPL": "es-419",
 	} {
 		if got := siteLang(in); got != want {
 			t.Errorf("%q: %q, want %q", in, got, want)
 		}
 	}
-	if !langWanted([]string{"es"}, "es-es") || !langWanted([]string{"es"}, "es-la") || langWanted([]string{"es-es"}, "es-la") {
+	if !langWanted([]string{"es"}, "es-es") || !langWanted([]string{"es"}, "es-419") || langWanted([]string{"es-es"}, "es-419") {
 		t.Error("langWanted mismatch for Spanish regions")
 	}
 }
@@ -38,8 +38,8 @@ func TestOpenSubtitles_SpanishRegions(t *testing.T) {
 	if err != nil || len(esES) != 1 || esES[0].Language != "es-es" {
 		t.Fatalf("es-es: %+v %v", esES, err)
 	}
-	esLA, err := s.Search(context.Background(), Query{Kind: "movie", Title: "The Lantern", Year: 2010, Languages: []string{"es-la"}})
-	if err != nil || len(esLA) != 1 || esLA[0].Language != "es-la" {
-		t.Fatalf("es-la: %+v %v", esLA, err)
+	esLA, err := s.Search(context.Background(), Query{Kind: "movie", Title: "The Lantern", Year: 2010, Languages: []string{"es-419"}})
+	if err != nil || len(esLA) != 1 || esLA[0].Language != "es-419" {
+		t.Fatalf("es-419: %+v %v", esLA, err)
 	}
 }

@@ -30,14 +30,14 @@ func isSubtitleNote(low []string, i int) bool {
 	return false
 }
 
-// guardedMoreLangOK checks short ambiguous tokens ("hun", "cast", "lat") that
+// guardedMoreLangOK checks short ambiguous tokens ("cast", "lat") that
 // need a tag before them so title words are not misread as audio languages.
 func guardedMoreLangOK(t string, low []string, i int) bool {
 	if isSubtitleNote(low, i) {
 		return false
 	}
 	switch t {
-	case "hun", "cast", "lat":
+	case "cast", "lat":
 		return i > 0 && !plainWord(low[i-1])
 	}
 	return true
